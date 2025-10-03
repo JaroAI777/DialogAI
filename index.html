@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Tłumacz Głosowy AI – PL↔EN</title>
   <meta name="description" content="Prosty start do rozmowy z agentem głosowym AI tłumaczącym między polskim i angielskim." />
   <style>
@@ -105,11 +105,14 @@
     elevenlabs-convai {
       position: fixed !important;
       left: 50% !important;
-      transform: translateX(-50%) !important;
+      transform: translateX(-50%) translateZ(0) !important;
       bottom: max(14px, env(safe-area-inset-bottom)) !important; /* iOS safe-area */
       z-index: 9999 !important;
       display: block;
       margin: 0;
+      max-width: min(460px, 96vw) !important;
+      box-sizing: border-box !important;
+      contain: layout paint style;
     }
     @supports not (bottom: env(safe-area-inset-bottom)) {
       elevenlabs-convai { bottom: clamp(14px, 2.2vw, 24px) !important; }
@@ -117,14 +120,25 @@
     @media (max-width: 640px) {
       elevenlabs-convai {
         left: 50% !important;
-        transform: translateX(-50%) !important;
+        transform: translateX(-50%) translateZ(0) !important;
         bottom: clamp(10px, 4vw, 18px) !important;
+        max-width: 96vw !important;
       }
+    }
     }
     }
 
     /* Zapobieganie zasłanianiu treści stopki przez przycisk */
     footer { padding-bottom: clamp(80px, 12vh, 128px); }
+  
+    /* Zabezpieczenia układu na mobile przy rozwinięciu widżetu */
+    html, body { overflow-x: hidden; }
+    body { overscroll-behavior: contain; }
+    html.convai-expanded, body.convai-expanded { overflow: hidden; }
+    html.convai-expanded footer { padding-bottom: clamp(200px, 26vh, 320px); }
+    @media (min-width: 641px) {
+      html.convai-expanded footer { padding-bottom: clamp(120px, 18vh, 200px); }
+    }
   </style>
 </head>
 <body>
@@ -183,6 +197,23 @@
           }
         }
       }).catch(() => {/* ciche pominięcie */});
+    })();
+  </script>
+  <script>
+    // Wykrywanie rozwinięcia panelu widżetu i blokada przewijania tła na mobile
+    (function() {
+      const el = document.querySelector('elevenlabs-convai');
+      if (!el || !('ResizeObserver' in window)) return;
+      const ro = new ResizeObserver((entries) => {
+        for (const e of entries) {
+          const r = e.contentRect || {};
+          // Heurystyka: bąbelek ~64-96px; panel rozwinięty ma zwykle > 140px szer.
+          const expanded = (r.width || 0) > 140 && (r.height || 0) > 140;
+          document.documentElement.classList.toggle('convai-expanded', expanded);
+          document.body.classList.toggle('convai-expanded', expanded);
+        }
+      });
+      try { ro.observe(el); } catch(_) {}
     })();
   </script>
 </body>

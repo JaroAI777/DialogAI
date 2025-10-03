@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tłumacz Głosowy AI – PL↔EN</title>
+  <meta name="description" content="Prosty start do rozmowy z agentem głosowym AI tłumaczącym między polskim i angielskim." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121a33;
+      --text: #eaf2ff;
+      --muted: #a9b3c9;
+      --accent: #4ea8ff;
+      --accent-2: #72f2c1;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 70% -10%, rgba(114,242,193,.15), transparent 50%),
+                  radial-gradient(900px 500px at 10% 10%, rgba(78,168,255,.12), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 24px 20px;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none; color: var(--text);
+    }
+    .logo {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+    }
+    .brand h1 { font-size: 18px; margin: 0; letter-spacing: .3px; }
+
+    main { flex: 1; display: grid; place-items: center; padding: 24px; }
+
+    .hero {
+      width: 100%; max-width: 980px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .hero h2 { font-size: 32px; margin: 0 0 10px; }
+    .hero p.lead { color: var(--muted); margin: 0 0 20px; font-size: 17px; }
+
+    .grid {
+      display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 18px;
+    }
+    @media (min-width: 800px) {
+      .grid { grid-template-columns: 1.25fr .75fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      min-height: 220px;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 18px; }
+    .steps { list-style: decimal; padding-left: 18px; margin: 8px 0 0; color: var(--muted); }
+    .steps li { margin: 6px 0; }
+
+    .features { display: grid; gap: 10px; margin-top: 6px; }
+    .pill {
+      display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 13px;
+      border: 1px solid rgba(255,255,255,.12); color: var(--text); background: rgba(255,255,255,.03);
+    }
+
+    .inline-widget {
+      display: block;
+      width: 100%; height: 340px; /* bezpieczna wysokość; widget może renderować pływający przycisk */
+      border: 1px dashed rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 12px; margin-top: 10px;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 12px, transparent 12px 24px);
+    }
+
+    footer { color: var(--muted); text-align: center; font-size: 13px; padding: 24px; }
+    a { color: var(--accent); }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="#" aria-label="Strona główna – Tłumacz Głosowy AI">
+      <span class="logo" aria-hidden="true"></span>
+      <h1>Tłumacz Głosowy AI <span style="opacity:.75">PL↔EN</span></h1>
+    </a>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Sekcja startowa">
+      <h2>Rozmawiaj naturalnie. Tłumaczenie w czasie rzeczywistym.</h2>
+      <p class="lead">Agent głosowy tłumaczy dwukierunkowo: z polskiego na angielski i z angielskiego na polski. Wystarczy kliknąć przycisk rozmowy i zezwolić na dostęp do mikrofonu.</p>
+
+      <div class="grid">
+        <div class="card" aria-label="Instrukcja">
+          <h3>Jak zacząć</h3>
+          <ol class="steps">
+            <li>Kliknij okrągły przycisk rozmowy widoczny w prawym dolnym rogu ekranu.</li>
+            <li>Na prośbę przeglądarki <strong>zezwól</strong> na dostęp do mikrofonu.</li>
+            <li>Mów po <strong>polsku</strong> lub <strong>angielsku</strong> – agent rozpozna język i odpowie w języku docelowym.</li>
+          </ol>
+          <div class="features" aria-label="Cechy">
+            <span class="pill">Dwukierunkowe PL↔EN</span>
+            <span class="pill">Naturalna konwersacja</span>
+            <span class="pill">Obsługa mikrofonu</span>
+          </div>
+        </div>
+
+        <div class="card" aria-label="Agent głosowy – osadzony">
+          <h3>Agent (osadzony)</h3>
+          <p class="lead" style="margin: 0 0 8px">Możesz korzystać z pływającego przycisku lub osadzonego komponentu poniżej.</p>
+          <!-- Inline placeholder: niektóre konfiguracje renderują bąbelek jako pływający. Ten blok zapewnia kontekst wizualny. -->
+          <div class="inline-widget">
+            <elevenlabs-convai agent-id="agent_9601k6nzz9anftwsg4ejywt5bp2h"></elevenlabs-convai>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Wskazówka: jeśli nie widzisz przycisku rozmowy, odśwież stronę lub sprawdź uprawnienia mikrofonu w przeglądarce.</span>
+  </footer>
+
+  <!-- ElevenLabs ConvAI widget -->
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <noscript>
+    Aby skorzystać z tłumacza głosowego, włącz JavaScript w przeglądarce.
+  </noscript>
+
+  <script>
+    // Prosta kontrola dostępu do mikrofonu (opcjonalnie informacyjna)
+    (function() {
+      if (!('mediaDevices' in navigator)) return;
+      // Podpowiedź dla użytkownika, że mikrofon jest dostępny (nie wymusza zgody):
+      navigator.mediaDevices.enumerateDevices().then(list => {
+        const hasMic = list.some(d => d.kind === 'audioinput');
+        if (!hasMic) {
+          const foot = document.querySelector('footer');
+          if (foot) {
+            foot.innerHTML = 'Nie wykryto mikrofonu. Podłącz mikrofon lub sprawdź ustawienia systemowe.';
+          }
+        }
+      }).catch(() => {/* ciche pominięcie */});
+    })();
+  </script>
+</body>
+</html>

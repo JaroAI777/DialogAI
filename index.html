@@ -100,6 +100,31 @@
     footer { color: var(--muted); text-align: center; font-size: 13px; padding: 24px; }
     a { color: var(--accent); }
     .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      
+    /* --- Pozycjonowanie pływającego przycisku ElevenLabs (desktop + mobile) --- */
+    elevenlabs-convai {
+      position: fixed !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      bottom: max(14px, env(safe-area-inset-bottom)) !important; /* iOS safe-area */
+      z-index: 9999 !important;
+      display: block;
+      margin: 0;
+    }
+    @supports not (bottom: env(safe-area-inset-bottom)) {
+      elevenlabs-convai { bottom: clamp(14px, 2.2vw, 24px) !important; }
+    }
+    @media (max-width: 640px) {
+      elevenlabs-convai {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        bottom: clamp(10px, 4vw, 18px) !important;
+      }
+    }
+    }
+
+    /* Zapobieganie zasłanianiu treści stopki przez przycisk */
+    footer { padding-bottom: clamp(80px, 12vh, 128px); }
   </style>
 </head>
 <body>
@@ -119,7 +144,7 @@
         <div class="card" aria-label="Instrukcja">
           <h3>Jak zacząć</h3>
           <ol class="steps">
-            <li>Kliknij okrągły przycisk rozmowy widoczny w prawym dolnym rogu ekranu.</li>
+            <li>Kliknij okrągły przycisk rozmowy widoczny na dole, po środku ekranu.</li>
             <li>Na prośbę przeglądarki <strong>zezwól</strong> na dostęp do mikrofonu.</li>
             <li>Mów po <strong>polsku</strong> lub <strong>angielsku</strong> – agent rozpozna język i odpowie w języku docelowym.</li>
           </ol>
@@ -132,7 +157,7 @@
   </main>
 
   <footer>
-    <span>Wskazówka: jeśli nie widzisz przycisku rozmowy, odśwież stronę lub sprawdź uprawnienia mikrofonu w przeglądarce.</span>
+    <span>Wskazówka: przycisk rozmowy znajduje się na dole, po środku ekranu. Jeśli go nie widzisz, odśwież stronę lub sprawdź uprawnienia mikrofonu w przeglądarce.</span>
   </footer>
 
   <!-- ElevenLabs ConvAI: pływający widżet rozmowy -->

@@ -10,25 +10,32 @@
   <meta property="og:description" content="Strona startowa" />
   <meta property="og:type" content="website" />
   <meta name="robots" content="noindex,nofollow" />
-  <meta name="color-scheme" content="dark light" />
+  <meta name="color-scheme" content="light dark" />
 
   <style>
     :root{
-      --bg-0:#0a0b10;
-      --bg-1:#0f1220;
-      --fg:#e6e9f2;
-      --muted:#9aa4bf;
-      --brand:#7aa2ff;
+      /* Jaśniejsza paleta */
+      --bg-0:#f5f7fb;
+      --bg-1:#eef2fb;
+      --fg:#0e1425;
+      --muted:#6b738a;
+      --brand:#3b63ff;
+      --line: rgba(0,0,0,0.06);
+      --card-bg: rgba(255,255,255,0.7);
+      --card-border: rgba(22,30,50,0.12);
+      --glow: rgba(59,99,255,0.20);
     }
+
     *,*::before,*::after{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
       color:var(--fg);
-      background: radial-gradient(1200px 800px at 70% 20%, rgba(122,162,255,0.12), transparent 60%),
-                  radial-gradient(800px 600px at 20% 80%, rgba(122,162,255,0.10), transparent 55%),
-                  linear-gradient(180deg, var(--bg-1), var(--bg-0) 40%, #07080f 100%);
+      background:
+        radial-gradient(1200px 800px at 70% 20%, rgba(59,99,255,0.10), transparent 60%),
+        radial-gradient(800px 600px at 20% 80%, rgba(59,99,255,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-0) 40%, #ffffff 100%);
       overflow:hidden;
     }
 
@@ -36,64 +43,70 @@
     header{
       position:fixed; top:0; left:0; right:0; height:64px; z-index:10;
       display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(180deg, rgba(10,12,20,0.75), rgba(10,12,20,0.35));
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.55));
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      border-bottom:1px solid rgba(122,162,255,0.22);
+      border-bottom:1px solid var(--card-border);
     }
     .brand{
       font-weight:700; letter-spacing:.12em; text-transform:uppercase;
-      font-size:14px;
-      color:var(--fg);
-      display:flex; align-items:center; gap:.6rem;
-      white-space:nowrap;
+      font-size:14px; color:var(--fg);
+      display:flex; align-items:center; gap:.6rem; white-space:nowrap;
     }
     .brand::before{
       content:"";
       width:10px; height:10px; border-radius:50%;
-      background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(122,162,255,0.1) 100%);
-      box-shadow: 0 0 16px rgba(122,162,255,0.7);
+      background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(59,99,255,0.12) 100%);
+      box-shadow: 0 0 16px rgba(59,99,255,0.45);
     }
 
-    /* Siatka techniczna */
+    /* Siatka techniczna (dla jasnego tła) */
     .grid-overlay{
-      position:fixed; inset:0; pointer-events:none; opacity:0.22;
+      position:fixed; inset:0; pointer-events:none; opacity:1;
       background:
-        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0/40px 40px,
-        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0/40px 40px;
+        linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0/40px 40px,
+        linear-gradient(to bottom, var(--line) 1px, transparent 1px) 0 0/40px 40px;
       mask: radial-gradient(60% 60% at 50% 50%, black, transparent 90%);
     }
+
+    /* Delikatna linia skanująca */
     .scanline{
       position:fixed; left:0; right:0; height:2px; top:62px;
-      background: linear-gradient(90deg, transparent, rgba(122,162,255,0.55), transparent);
+      background: linear-gradient(90deg, transparent, rgba(59,99,255,0.45), transparent);
       filter: blur(0.5px);
       animation: sweep 5s linear infinite;
-      opacity:0.55;
+      opacity:0.6;
       pointer-events:none;
     }
     @keyframes sweep{ 0%{ transform: translateY(0vh);} 100%{ transform: translateY(100vh);} }
 
-    /* Główna karta */
+    /* Układ główny */
     .wrap{
       position:relative; height:100dvh; width:100%;
       display:grid; place-items:center;
-      padding:24px; padding-top:88px; /* przestrzeń pod nagłówek */
+      padding:24px; padding-top:88px;
     }
+
+    /* Karta centralna – jaśniejsza, „glass” */
     .card{
       position:relative;
       padding: clamp(24px, 4vw, 48px);
       border-radius: 18px;
-      background: rgba(10,12,20,0.40);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(122,162,255,0.22);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.04);
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      box-shadow:
+        0 10px 30px rgba(10,20,40,0.08),
+        inset 0 0 0 1px rgba(255,255,255,0.4);
     }
     .card::after{
       content:""; position:absolute; inset:-2px; border-radius:20px;
-      background: radial-gradient(60% 60% at 50% 0%, rgba(122,162,255,0.25), transparent 60%);
+      background: radial-gradient(60% 60% at 50% 0%, var(--glow), transparent 60%);
       z-index:-1;
     }
+
+    /* Napis WIP – ciemniejszy gradient */
     .title{
       margin:0;
       letter-spacing: 0.16em;
@@ -101,13 +114,15 @@
       text-transform:uppercase;
       font-size: clamp(28px, 6vw, 64px);
       line-height:1.05;
-      background: linear-gradient(180deg, #ffffff, #cfd7ff 60%, #a6b7ff);
+      background: linear-gradient(180deg, #0e1425, #2b3b73 60%, #3b63ff);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       text-align:center;
-      text-shadow: 0 0 24px rgba(122,162,255,0.25);
+      text-shadow: 0 0 18px rgba(59,99,255,0.18);
     }
+
+    /* Migający kursor (jaśniejsza wersja) */
     .cursor{
       display:inline-block; width:0.6ch; margin-left:0.2ch;
       border-right: 3px solid var(--brand);
@@ -141,14 +156,10 @@
     </div>
   </main>
 
-  <!-- OpenAI Widget Embed (niewidoczny) -->
-  <div id="openai-widget-anchor" style="display:none;"></div>
-  <!-- Przykład — zastąp oficjalnym kodem OpenAI:
-  <script
-    src="https://cdn.openai.com/widget/latest.js"
-    data-openai-api-key="REPLACE_WITH_YOUR_KEY"
-    data-openai-target="#openai-widget-anchor">
-  </script>
-  -->
+  <!-- ElevenLabs widget (osadzony, ale ukryty, aby UI strony pozostał niezmieniony) -->
+  <div style="display:none">
+    <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
+  </div>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
 
   <style>
     :root{
-      /* Jasny motyw, lekko przyciemniony vs poprzednia jasna wersja */
+      /* JAŚNIEJSZY MOTYW, ALE "TROCHĘ CIEMNIEJSZY" NIŻ POPRZEDNIO */
       --bg-0:#e9edf7;
       --bg-1:#dfe6f7;
       --fg:#10162a;
@@ -36,14 +36,12 @@
         radial-gradient(1200px 800px at 70% 20%, rgba(53,88,230,0.12), transparent 60%),
         radial-gradient(800px 600px at 20% 80%, rgba(53,88,230,0.10), transparent 55%),
         linear-gradient(180deg, var(--bg-1), var(--bg-0) 40%, #f7f9ff 100%);
-      /* Zostawiamy overflow:auto, aby nie obcinać rozwijanego okna widżetu */
-      overflow:auto;
-      min-height:100dvh;
+      overflow:hidden;
     }
 
     /* Nagłówek */
     header{
-      position:sticky; top:0; left:0; right:0; height:64px; z-index:20;
+      position:fixed; top:0; left:0; right:0; height:64px; z-index:20;
       display:flex; align-items:center; justify-content:center;
       background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.55));
       backdrop-filter: blur(6px);
@@ -72,7 +70,7 @@
       z-index: 0;
     }
 
-    /* Delikatna linia skanująca (nie przechwytuje kliknięć) */
+    /* Delikatna linia skanująca */
     .scanline{
       position:fixed; left:0; right:0; height:2px; top:62px;
       background: linear-gradient(90deg, transparent, rgba(53,88,230,0.45), transparent);
@@ -86,9 +84,9 @@
 
     /* Układ główny */
     .wrap{
-      position:relative; min-height:calc(100dvh - 64px); width:100%;
+      position:relative; height:100dvh; width:100%;
       display:grid; place-items:center;
-      padding:24px;
+      padding:24px; padding-top:88px;
       z-index: 1;
     }
 
@@ -127,6 +125,7 @@
       text-shadow: 0 0 18px rgba(53,88,230,0.18);
     }
 
+    /* Migający kursor */
     .cursor{
       display:inline-block; width:0.6ch; margin-left:0.2ch;
       border-right: 3px solid var(--brand);
@@ -140,20 +139,8 @@
       .cursor{ animation:none; border-right-color: var(--muted); }
     }
 
-    /* --- KLUCZOWE: Wymuszenie widoczności i klikalności widżetu --- */
-    elevenlabs-convai {
-      position: fixed !important;
-      right: 24px !important;
-      bottom: 24px !important;
-      z-index: 1000 !important;
-      display: block !important;
-      pointer-events: auto !important;
-    }
-    /* Jeżeli widżet używa wewnętrznego shadow DOM, ten selektor dalej pomaga
-       uniknąć ewentualnych reguł "display:none" z dziedziczenia */
-    elevenlabs-convai, elevenlabs-convai * {
-      visibility: visible !important;
-    }
+    /* Upewniamy się, że widget pozostaje nad tłem/siatką */
+    elevenlabs-convai { position: relative; z-index: 30; }
   </style>
 </head>
 <body>
@@ -162,7 +149,7 @@
     <div class="brand">dialog AI</div>
   </header>
 
-  <!-- Efekty tła (nie blokują kliknięć) -->
+  <!-- Efekty tła -->
   <div class="grid-overlay" aria-hidden="true"></div>
   <div class="scanline" aria-hidden="true"></div>
 
@@ -175,12 +162,8 @@
     </div>
   </main>
 
-  <!-- WIDŻET ELEVENLABS — WIDOCZNY I KLIKALNY -->
+  <!-- WIDGET ELEVENLABS (WIDOCZNY) -->
   <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-
-  <noscript>
-    Wymagany jest JavaScript, aby wyświetlić widżet ElevenLabs.
-  </noscript>
 </body>
 </html>

@@ -14,16 +14,16 @@
 
   <style>
     :root{
-      /* Jaśniejsza paleta */
-      --bg-0:#f5f7fb;
-      --bg-1:#eef2fb;
-      --fg:#0e1425;
-      --muted:#6b738a;
-      --brand:#3b63ff;
-      --line: rgba(0,0,0,0.06);
-      --card-bg: rgba(255,255,255,0.7);
-      --card-border: rgba(22,30,50,0.12);
-      --glow: rgba(59,99,255,0.20);
+      /* JAŚNIEJSZY MOTYW, ALE "TROCHĘ CIEMNIEJSZY" NIŻ POPRZEDNIO */
+      --bg-0:#e9edf7;
+      --bg-1:#dfe6f7;
+      --fg:#10162a;
+      --muted:#5d667f;
+      --brand:#3558e6;
+      --line: rgba(0,0,0,0.08);
+      --card-bg: rgba(255,255,255,0.75);
+      --card-border: rgba(16,22,42,0.16);
+      --glow: rgba(53,88,230,0.22);
     }
 
     *,*::before,*::after{ box-sizing:border-box; }
@@ -33,15 +33,15 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
       color:var(--fg);
       background:
-        radial-gradient(1200px 800px at 70% 20%, rgba(59,99,255,0.10), transparent 60%),
-        radial-gradient(800px 600px at 20% 80%, rgba(59,99,255,0.08), transparent 55%),
-        linear-gradient(180deg, var(--bg-1), var(--bg-0) 40%, #ffffff 100%);
+        radial-gradient(1200px 800px at 70% 20%, rgba(53,88,230,0.12), transparent 60%),
+        radial-gradient(800px 600px at 20% 80%, rgba(53,88,230,0.10), transparent 55%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-0) 40%, #f7f9ff 100%);
       overflow:hidden;
     }
 
     /* Nagłówek */
     header{
-      position:fixed; top:0; left:0; right:0; height:64px; z-index:10;
+      position:fixed; top:0; left:0; right:0; height:64px; z-index:20;
       display:flex; align-items:center; justify-content:center;
       background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.55));
       backdrop-filter: blur(6px);
@@ -56,27 +56,29 @@
     .brand::before{
       content:"";
       width:10px; height:10px; border-radius:50%;
-      background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(59,99,255,0.12) 100%);
-      box-shadow: 0 0 16px rgba(59,99,255,0.45);
+      background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(53,88,230,0.14) 100%);
+      box-shadow: 0 0 16px rgba(53,88,230,0.42);
     }
 
-    /* Siatka techniczna (dla jasnego tła) */
+    /* Siatka techniczna */
     .grid-overlay{
       position:fixed; inset:0; pointer-events:none; opacity:1;
       background:
         linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0/40px 40px,
         linear-gradient(to bottom, var(--line) 1px, transparent 1px) 0 0/40px 40px;
       mask: radial-gradient(60% 60% at 50% 50%, black, transparent 90%);
+      z-index: 0;
     }
 
     /* Delikatna linia skanująca */
     .scanline{
       position:fixed; left:0; right:0; height:2px; top:62px;
-      background: linear-gradient(90deg, transparent, rgba(59,99,255,0.45), transparent);
+      background: linear-gradient(90deg, transparent, rgba(53,88,230,0.45), transparent);
       filter: blur(0.5px);
       animation: sweep 5s linear infinite;
       opacity:0.6;
       pointer-events:none;
+      z-index: 0;
     }
     @keyframes sweep{ 0%{ transform: translateY(0vh);} 100%{ transform: translateY(100vh);} }
 
@@ -85,9 +87,10 @@
       position:relative; height:100dvh; width:100%;
       display:grid; place-items:center;
       padding:24px; padding-top:88px;
+      z-index: 1;
     }
 
-    /* Karta centralna – jaśniejsza, „glass” */
+    /* Karta centralna */
     .card{
       position:relative;
       padding: clamp(24px, 4vw, 48px);
@@ -97,8 +100,8 @@
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--card-border);
       box-shadow:
-        0 10px 30px rgba(10,20,40,0.08),
-        inset 0 0 0 1px rgba(255,255,255,0.4);
+        0 10px 30px rgba(10,20,40,0.10),
+        inset 0 0 0 1px rgba(255,255,255,0.45);
     }
     .card::after{
       content:""; position:absolute; inset:-2px; border-radius:20px;
@@ -106,7 +109,7 @@
       z-index:-1;
     }
 
-    /* Napis WIP – ciemniejszy gradient */
+    /* Napis WIP */
     .title{
       margin:0;
       letter-spacing: 0.16em;
@@ -114,15 +117,15 @@
       text-transform:uppercase;
       font-size: clamp(28px, 6vw, 64px);
       line-height:1.05;
-      background: linear-gradient(180deg, #0e1425, #2b3b73 60%, #3b63ff);
+      background: linear-gradient(180deg, #0f1833, #2a3a72 60%, #3558e6);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       text-align:center;
-      text-shadow: 0 0 18px rgba(59,99,255,0.18);
+      text-shadow: 0 0 18px rgba(53,88,230,0.18);
     }
 
-    /* Migający kursor (jaśniejsza wersja) */
+    /* Migający kursor */
     .cursor{
       display:inline-block; width:0.6ch; margin-left:0.2ch;
       border-right: 3px solid var(--brand);
@@ -135,6 +138,9 @@
       .scanline{ animation:none; }
       .cursor{ animation:none; border-right-color: var(--muted); }
     }
+
+    /* Upewniamy się, że widget pozostaje nad tłem/siatką */
+    elevenlabs-convai { position: relative; z-index: 30; }
   </style>
 </head>
 <body>
@@ -156,10 +162,8 @@
     </div>
   </main>
 
-  <!-- ElevenLabs widget (osadzony, ale ukryty, aby UI strony pozostał niezmieniony) -->
-  <div style="display:none">
-    <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
-  </div>
+  <!-- WIDGET ELEVENLABS (WIDOCZNY) -->
+  <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </body>
 </html>

@@ -1,27 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tłumacz</title>
+  <title>WORK IN PROGRESS — dialog AI</title>
+
+  <meta name="description" content="WORK IN PROGRESS — dialog AI" />
+  <meta property="og:title" content="WORK IN PROGRESS — dialog AI" />
+  <meta property="og:description" content="Strona startowa" />
+  <meta property="og:type" content="website" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="color-scheme" content="dark light" />
+
   <style>
-    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
-    h1 { margin: 0; font-size: clamp(28px, 5vw, 48px); font-weight: 700; }
-    .flags { display:flex; flex-direction:column; align-items:center; gap:8px; }
-  .pair { display:flex; align-items:center; gap:10px; font-size:18px; }
-  .emoji-flag { font-size:28px; line-height:1; }
-  .dir { font-weight:600; letter-spacing:.3px; }
-  @media (min-width:480px){ .flags{ flex-direction:row; gap:16px; } }
+    :root{
+      --bg-0:#0a0b10;
+      --bg-1:#0f1220;
+      --fg:#e6e9f2;
+      --muted:#9aa4bf;
+      --brand:#7aa2ff;
+    }
+    *,*::before,*::after{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color:var(--fg);
+      background: radial-gradient(1200px 800px at 70% 20%, rgba(122,162,255,0.12), transparent 60%),
+                  radial-gradient(800px 600px at 20% 80%, rgba(122,162,255,0.10), transparent 55%),
+                  linear-gradient(180deg, var(--bg-1), var(--bg-0) 40%, #07080f 100%);
+      overflow:hidden;
+    }
+
+    /* Nagłówek */
+    header{
+      position:fixed; top:0; left:0; right:0; height:64px; z-index:10;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg, rgba(10,12,20,0.75), rgba(10,12,20,0.35));
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-bottom:1px solid rgba(122,162,255,0.22);
+    }
+    .brand{
+      font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+      font-size:14px;
+      color:var(--fg);
+      display:flex; align-items:center; gap:.6rem;
+      white-space:nowrap;
+    }
+    .brand::before{
+      content:"";
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(122,162,255,0.1) 100%);
+      box-shadow: 0 0 16px rgba(122,162,255,0.7);
+    }
+
+    /* Siatka techniczna */
+    .grid-overlay{
+      position:fixed; inset:0; pointer-events:none; opacity:0.22;
+      background:
+        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0/40px 40px,
+        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px) 0 0/40px 40px;
+      mask: radial-gradient(60% 60% at 50% 50%, black, transparent 90%);
+    }
+    .scanline{
+      position:fixed; left:0; right:0; height:2px; top:62px;
+      background: linear-gradient(90deg, transparent, rgba(122,162,255,0.55), transparent);
+      filter: blur(0.5px);
+      animation: sweep 5s linear infinite;
+      opacity:0.55;
+      pointer-events:none;
+    }
+    @keyframes sweep{ 0%{ transform: translateY(0vh);} 100%{ transform: translateY(100vh);} }
+
+    /* Główna karta */
+    .wrap{
+      position:relative; height:100dvh; width:100%;
+      display:grid; place-items:center;
+      padding:24px; padding-top:88px; /* przestrzeń pod nagłówek */
+    }
+    .card{
+      position:relative;
+      padding: clamp(24px, 4vw, 48px);
+      border-radius: 18px;
+      background: rgba(10,12,20,0.40);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(122,162,255,0.22);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .card::after{
+      content:""; position:absolute; inset:-2px; border-radius:20px;
+      background: radial-gradient(60% 60% at 50% 0%, rgba(122,162,255,0.25), transparent 60%);
+      z-index:-1;
+    }
+    .title{
+      margin:0;
+      letter-spacing: 0.16em;
+      font-weight:800;
+      text-transform:uppercase;
+      font-size: clamp(28px, 6vw, 64px);
+      line-height:1.05;
+      background: linear-gradient(180deg, #ffffff, #cfd7ff 60%, #a6b7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align:center;
+      text-shadow: 0 0 24px rgba(122,162,255,0.25);
+    }
+    .cursor{
+      display:inline-block; width:0.6ch; margin-left:0.2ch;
+      border-right: 3px solid var(--brand);
+      animation: blink 1.2s steps(1,end) infinite;
+      vertical-align:-0.08em;
+    }
+    @keyframes blink{ 0%,49%{opacity:1;} 50%,100%{opacity:0;} }
+
+    @media (prefers-reduced-motion: reduce){
+      .scanline{ animation:none; }
+      .cursor{ animation:none; border-right-color: var(--muted); }
+    }
   </style>
 </head>
 <body>
-  <h1>Tłumacz</h1>
-  <div class="flags" aria-label="Kierunki tłumaczenia">
-    <div class="pair"><span class="emoji-flag" role="img" aria-label="Polska">🇵🇱</span><span class="dir">PL → EN</span><span class="emoji-flag" role="img" aria-label="United Kingdom">🇬🇧</span></div>
-    <div class="pair"><span class="emoji-flag" role="img" aria-label="United Kingdom">🇬🇧</span><span class="dir">EN → PL</span><span class="emoji-flag" role="img" aria-label="Polska">🇵🇱</span></div>
-  </div>
-  <elevenlabs-convai agent-id="agent_9601k6nzz9anftwsg4ejywt5bp2h"></elevenlabs-convai>
-  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-  <noscript>Aby skorzystać z tłumacza głosowego, włącz JavaScript w przeglądarce.</noscript>
+  <!-- Nagłówek -->
+  <header role="banner" aria-label="dialog AI">
+    <div class="brand">dialog AI</div>
+  </header>
+
+  <!-- Efekty tła -->
+  <div class="grid-overlay" aria-hidden="true"></div>
+  <div class="scanline" aria-hidden="true"></div>
+
+  <!-- Treść centralna: wyłącznie napis -->
+  <main class="wrap" role="main" aria-label="Work in progress">
+    <div class="card" aria-live="polite">
+      <h1 class="title">
+        WORK IN PROGRESS<span class="cursor" aria-hidden="true"></span>
+      </h1>
+    </div>
+  </main>
+
+  <!-- OpenAI Widget Embed (niewidoczny) -->
+  <div id="openai-widget-anchor" style="display:none;"></div>
+  <!-- Przykład — zastąp oficjalnym kodem OpenAI:
+  <script
+    src="https://cdn.openai.com/widget/latest.js"
+    data-openai-api-key="REPLACE_WITH_YOUR_KEY"
+    data-openai-target="#openai-widget-anchor">
+  </script>
+  -->
 </body>
 </html>

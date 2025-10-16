@@ -6,140 +6,112 @@
   <title>WORK IN PROGRESS — dialog AI</title>
   <meta name="robots" content="noindex,nofollow" />
   <meta name="color-scheme" content="light dark" />
-  <meta name="description" content="Minimalistyczna strona startowa z technicznym akcentem." />
+  <meta name="description" content="Minimalistyczna strona startowa z technicznym, animowanym tłem." />
 
   <style>
-    /* ——— USTAWIENIA KOLORYSTYKI (jasno, technicznie, elegancko) ——— */
     :root{
-      --bg-top: #f6f8ff;
-      --bg-mid: #ecf1ff;
-      --bg-bot: #e6ebfb;
-      --ink:    #0f1733;
-      --muted:  #606a86;
-      --brand:  #3558e6;
-      --stroke: rgba(16, 23, 51, .10);
-      --card:   rgba(255,255,255,.72);
+      --bg-top:#f6f8ff;
+      --bg-mid:#ecf1ff;
+      --bg-bot:#e7ecfb;
+      --ink:#0f1733;
+      --muted:#606a86;
+      --brand:#3558e6;
+      --stroke: rgba(16,23,51,.12);
+      --card: rgba(255,255,255,.72);
       --card-b: rgba(16,23,51,.14);
-      --glow:   rgba(53,88,230,.22);
-      --grid:   rgba(16,23,51,.06);
+      --glow: rgba(53,88,230,.22);
     }
 
-    /* ——— PODSTAWA ——— */
-    *,*::before,*::after{ box-sizing: border-box; }
-    html, body { height: 100%; }
+    *,*::before,*::after{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
-      margin: 0;
+      margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      color: var(--ink);
+      color:var(--ink);
       background:
-        radial-gradient(1000px 700px at 75% 15%, rgba(53,88,230,.15), transparent 60%),
-        radial-gradient(800px 600px at 20% 85%, rgba(53,88,230,.10), transparent 55%),
+        radial-gradient(1000px 700px at 78% 12%, rgba(53,88,230,.16), transparent 60%),
+        radial-gradient(800px 600px at 18% 86%, rgba(53,88,230,.10), transparent 55%),
         linear-gradient(180deg, var(--bg-top), var(--bg-mid) 50%, var(--bg-bot) 100%);
-      min-height: 100dvh;
-      overflow: auto; /* NIE obcinamy wysuwanego UI widżetu */
+      min-height:100dvh;
+      overflow:auto;
     }
 
-    /* ——— NAGŁÓWEK (lekki, profesjonalny) ——— */
     header{
-      position: sticky; top: 0;
-      height: 64px; display: flex; align-items: center; justify-content: center;
+      position:sticky; top:0; z-index:5;
+      height:64px; display:flex; align-items:center; justify-content:center;
       background: rgba(255,255,255,.88);
       -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--stroke);
-      z-index: 5; /* niskie, by nic nie przykrywać */
+      border-bottom:1px solid var(--stroke);
+      text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:14px;
     }
-    .brand{
-      font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 14px;
-      display: inline-flex; align-items: center; gap: .6rem;
-    }
-    .brand::before{
-      content:""; width: 10px; height: 10px; border-radius: 50%;
+    header .dot{
+      width:10px; height:10px; border-radius:50%; margin-right:.6rem;
       background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(53,88,230,.14));
       box-shadow: 0 0 16px rgba(53,88,230,.42);
+      display:inline-block; vertical-align:middle;
     }
 
-    /* ——— TŁO „TECHNICZNE”: siatka + delikatna animacja ——— */
-    .grid{
-      position: fixed; inset: 0;
-      pointer-events: none; /* NICZEGO NIE BLOKUJE */
-      z-index: 0;
-      background:
-        linear-gradient(to right, var(--grid) 1px, transparent 1px) 0 0 / 40px 40px,
-        linear-gradient(to bottom, var(--grid) 1px, transparent 1px) 0 0 / 40px 40px;
-      mask: radial-gradient(70% 70% at 50% 45%, #000, transparent 90%);
-      animation: gridFloat 16s ease-in-out infinite alternate;
-    }
-    @keyframes gridFloat{
-      0%   { transform: translateY(0px) scale(1);    opacity: .9; }
-      100% { transform: translateY(10px) scale(1.01); opacity: .95; }
-    }
+    .fx { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
-    /* ——— SEKCJA GŁÓWNA ——— */
+    .scan{
+      position:fixed; left:0; right:0; top:64px; height:2px; z-index:0;
+      pointer-events:none;
+      background: linear-gradient(90deg, transparent, rgba(53,88,230,.45), transparent);
+      filter: blur(.5px); opacity:.55;
+      animation: sweep 6s linear infinite;
+    }
+    @keyframes sweep{ 0%{ transform:translateY(0);} 100%{ transform:translateY(100vh);} }
+
     main{
-      position: relative;
-      min-height: calc(100dvh - 64px);
-      display: grid; place-items: center;
-      padding: 28px;
-      z-index: 1;
+      position:relative; z-index:1;
+      min-height:calc(100dvh - 64px);
+      display:grid; place-items:center;
+      padding:28px;
+      text-align:center;
     }
 
-    /* „Kapsuła” – prosta, szklana karta z delikatną poświatą */
     .capsule{
-      position: relative;
-      padding: clamp(24px, 4vw, 48px);
-      border-radius: 20px;
+      position:relative;
+      padding: clamp(28px, 4vw, 56px);
+      border-radius:20px;
       background: var(--card);
-      border: 1px solid var(--card-b);
+      border:1px solid var(--card-b);
       -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
       box-shadow:
         0 12px 30px rgba(10,20,40,.08),
         inset 0 0 0 1px rgba(255,255,255,.45);
+      overflow:hidden;
     }
-    /* Subtelny techniczny „halo” */
-    .capsule::after{
-      content:"";
-      position: absolute; inset: -2px; border-radius: 22px;
-      background: radial-gradient(60% 60% at 50% 0%, var(--glow), transparent 60%);
-      z-index: -1;
+    .capsule::before{
+      content:""; position:absolute; inset:-1px; border-radius:22px; z-index:-1;
+      background: conic-gradient(from 0deg, rgba(53,88,230,.35), transparent 30%, rgba(53,88,230,.25) 60%, transparent 85%, rgba(53,88,230,.35));
+      filter: blur(14px);
+      animation: halo 10s linear infinite;
     }
+    @keyframes halo{ to { transform: rotate(360deg); } }
 
-    /* ——— NAPIS ——— */
     .title{
-      margin: 0;
-      text-align: center;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .18em;
+      margin:0;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.18em;
       font-size: clamp(28px, 6vw, 64px);
-      line-height: 1.06;
+      line-height:1.06;
       background: linear-gradient(180deg, #0e142b, #2a3a72 60%, var(--brand));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
+      -webkit-background-clip:text; background-clip:text; color:transparent;
       text-shadow: 0 0 18px rgba(53,88,230,.18);
     }
 
-    /* Delikatna „linia skanująca” (tylko smaczek) */
-    .scan{
-      position: fixed; left: 0; right: 0; top: 64px; height: 2px;
-      pointer-events: none; z-index: 0;
-      background: linear-gradient(90deg, transparent, rgba(53,88,230,.45), transparent);
-      filter: blur(.5px); opacity: .55;
-      animation: sweep 5.5s linear infinite;
-    }
-    @keyframes sweep{ 0% { transform: translateY(0); } 100% { transform: translateY(100vh); } }
-
-    /* Preferencje dostępności: redukcja ruchu */
     @media (prefers-reduced-motion: reduce){
-      .grid, .scan { animation: none; }
+      .scan{ animation:none; }
+      .capsule::before{ animation:none; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">dialog AI</div>
-  </header>
+  <header><span class="dot" aria-hidden="true"></span>dialog AI</header>
 
-  <!-- Tło techniczne (nie przechwytuje kliknięć) -->
-  <div class="grid" aria-hidden="true"></div>
+  <canvas class="fx" id="constellation" aria-hidden="true"></canvas>
   <div class="scan" aria-hidden="true"></div>
 
   <main role="main" aria-label="Strona w budowie">
@@ -148,10 +120,89 @@
     </div>
   </main>
 
-  <!-- WIDŻET ELEVENLABS — wklejony 1:1, bez atrybutów dodatkowych -->
   <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
-  <noscript>Wymagany jest JavaScript, aby wyświetlić widżet ElevenLabs.</noscript>
+  <script>
+    (function(){
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canvas = document.getElementById('constellation');
+      const ctx = canvas.getContext('2d');
+      let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      let w, h, points, running = !prefersReduced;
+
+      function resize(){
+        w = canvas.width  = Math.floor(innerWidth * dpr);
+        h = canvas.height = Math.floor(innerHeight * dpr);
+        canvas.style.width  = innerWidth + 'px';
+        canvas.style.height = innerHeight + 'px';
+        initPoints();
+      }
+
+      function initPoints(){
+        const density = 0.00011; // delikatna gęstość
+        const count = Math.max(40, Math.floor(w * h * density / (dpr*dpr)));
+        points = [];
+        for(let i=0;i<count;i++){
+          points.push({
+            x: Math.random()*w,
+            y: Math.random()*h,
+            vx: (Math.random()*2-1) * 0.08 * dpr,
+            vy: (Math.random()*2-1) * 0.08 * dpr
+          });
+        }
+      }
+
+      function step(){
+        if(!running) return;
+        ctx.clearRect(0,0,w,h);
+
+        for(const p of points){
+          p.x += p.vx; p.y += p.vy;
+          if(p.x < 0 || p.x > w) p.vx *= -1;
+          if(p.y < 0 || p.y > h) p.vy *= -1;
+        }
+
+        const thresh = 120 * dpr;
+        for(let i=0;i<points.length;i++){
+          const p = points[i];
+          for(let j=i+1;j<points.length;j++){
+            const q = points[j];
+            const dx = p.x - q.x, dy = p.y - q.y;
+            const dist = Math.hypot(dx, dy);
+            if(dist < thresh){
+              const a = (1 - dist/thresh) * 0.45;
+              ctx.strokeStyle = 'rgba(53,88,230,' + a + ')';
+              ctx.lineWidth = 1 * dpr;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        ctx.fillStyle = 'rgba(53,88,230,0.75)';
+        for(const p of points){
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 1.1 * dpr, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        running = !prefersReduced && document.visibilityState === 'visible';
+        if(running) requestAnimationFrame(step);
+      });
+
+      window.addEventListener('resize', resize);
+      resize();
+      if(running) requestAnimationFrame(step);
+    })();
+  </script>
+
+  <noscript>Wymagany jest JavaScript, aby wyświetlić animację i widżet ElevenLabs.</noscript>
 </body>
 </html>

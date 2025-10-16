@@ -4,139 +4,46 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WORK IN PROGRESS — dialog AI</title>
-
-  <meta name="description" content="WORK IN PROGRESS — dialog AI" />
-  <meta property="og:title" content="WORK IN PROGRESS — dialog AI" />
-  <meta property="og:description" content="Strona startowa" />
-  <meta property="og:type" content="website" />
   <meta name="robots" content="noindex,nofollow" />
   <meta name="color-scheme" content="light dark" />
-
   <style>
-    :root{
-      --bg-0:#e9edf7;
-      --bg-1:#dfe6f7;
-      --fg:#10162a;
-      --brand:#3558e6;
-      --rule: rgba(16,22,42,0.16);
+    /* Minimalny, neutralny styl – nic nie przykrywa widżetu */
+    html, body { height:100%; margin:0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9ff, #e9edf7);
+      color: #10162a;
     }
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
-      color:var(--fg);
-      background:
-        radial-gradient(1200px 800px at 70% 20%, rgba(53,88,230,0.10), transparent 60%),
-        radial-gradient(800px 600px at 20% 80%, rgba(53,88,230,0.08), transparent 55%),
-        linear-gradient(180deg, var(--bg-1), var(--bg-0) 40%, #f7f9ff 100%);
-      overflow:auto; /* pozwala rozwinąć UI widżetu */
+    header {
+      height:60px; display:flex; align-items:center; justify-content:center;
+      border-bottom: 1px solid rgba(16,22,42,.12);
+      background: rgba(255,255,255,.9);
+      text-transform: uppercase; letter-spacing: .12em; font-weight:700; font-size:14px;
     }
-
-    /* Nagłówek */
-    header{
-      position:sticky; top:0; z-index:10;
-      height:64px; display:flex; align-items:center; justify-content:center;
-      background: rgba(255,255,255,0.9);
-      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-      border-bottom:1px solid var(--rule);
-      text-transform:uppercase; letter-spacing:.12em; font-weight:700; font-size:14px;
+    main {
+      min-height: calc(100dvh - 60px);
+      display: grid; place-items: center; padding: 24px; text-align: center;
     }
-
-    /* Tło i skan — nie mogą przechwytywać kliknięć ani przykrywać czegokolwiek */
-    .grid-overlay,.scanline{ position:fixed; inset:0; pointer-events:none; z-index:0; }
-    .grid-overlay{
-      opacity:1;
-      background:
-        linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px) 0 0/40px 40px,
-        linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px) 0 0/40px 40px;
-      mask: radial-gradient(60% 60% at 50% 50%, black, transparent 90%);
-    }
-    .scanline{
-      top:62px; height:2px;
-      background: linear-gradient(90deg, transparent, rgba(53,88,230,0.45), transparent);
-      animation: sweep 5s linear infinite; filter: blur(.5px); opacity:.6;
-    }
-    @keyframes sweep{0%{transform:translateY(0)}100%{transform:translateY(100vh)}}
-
-    /* Sekcja główna */
-    main{ min-height:calc(100dvh - 64px); display:grid; place-items:center; padding:24px; position:relative; z-index:1; }
-    h1{
-      margin:0;
-      font-size: clamp(28px, 6vw, 64px);
-      letter-spacing:.16em; text-transform:uppercase; font-weight:800; text-align:center;
-      background: linear-gradient(180deg, #0f1833, #2a3a72 60%, var(--brand));
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow: 0 0 18px rgba(53,88,230,0.18);
-      transform: translateY(-8vh); /* lekko wyżej, by środek był wolny dla widżetu */
-    }
-
-    /* --- KLUCZOWE: twarde style dla widżetu (na wierzchu, środek ekranu) --- */
-    /* Uwaga: nie nadpisujemy stylów wewnątrz shadow DOM; ustawiamy tylko ramę */
-    elevenlabs-convai{
-      position: fixed !important;
-      left: 50% !important;
-      top: 50% !important;
-      transform: translate(-50%, -50%) !important;
-      z-index: 2147483647 !important; /* praktyczny maksimum */
-      display: block !important;
-      pointer-events: auto !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-    /* Jakiekolwiek reguły globalne nie „wyłączą” widżetu */
-    elevenlabs-convai, elevenlabs-convai *{
-      visibility: visible !important;
-      opacity: 1 !important;
+    h1 {
+      margin:0; font-size: clamp(28px, 6vw, 64px);
+      letter-spacing: .16em; text-transform: uppercase; font-weight: 800;
+      background: linear-gradient(180deg, #0f1833, #2a3a72 60%, #3558e6);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      text-shadow: 0 0 14px rgba(53,88,230,0.18);
     }
   </style>
 </head>
 <body>
   <header>dialog AI</header>
 
-  <!-- Efekty tła (nie chwytają kliknięć) -->
-  <div class="grid-overlay" aria-hidden="true"></div>
-  <div class="scanline" aria-hidden="true"></div>
-
   <main>
     <h1>WORK IN PROGRESS</h1>
   </main>
 
-  <!-- Skrypt osadzający (musi być wczytany) -->
+  <!-- WIDŻET ELEVENLABS – BEZ JAKICHKOLWIEK DODATKOWYCH ATRYBUTÓW LUB OPRAWEK -->
+  <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
-  <!-- STRAŻNIK WIDŻETU: przenosi/zakłada komponent i pilnuje jego stylów -->
-  <script>
-    (function ensureConvaiVisible(){
-      const AGENT_ID = "agent_3701k7j73w94ea5btrsjrm6cdqzn";
-
-      function mountOrFix(){
-        let el = document.querySelector("elevenlabs-convai");
-        if (!el) {
-          el = document.createElement("elevenlabs-convai");
-          el.setAttribute("agent-id", AGENT_ID);
-          document.body.appendChild(el);
-        } else if (el.parentElement !== document.body) {
-          document.body.appendChild(el); // przenieś bezpośrednio pod <body>, poza inne kontenery
-        }
-        // Wymuś style krytyczne w runtime (gdyby cokolwiek je nadpisało)
-        Object.assign(el.style, {
-          position: "fixed",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: "2147483647",
-          display: "block",
-          pointerEvents: "auto",
-          visibility: "visible",
-          opacity: "1"
-        });
-      }
-
-      // Po pełnym załadowaniu
-      window.addEventListener("load", () => {
-        mountOrFix();
-        // Obserwuj DOM i co 1s przez krótki czas „utwardzaj” widoczność
-        const observer = new MutationObserver(() => mountOrFix());
-        observer.observe(document.documentElement, { subtree: true, childList: true, attributes: true });
-
-        // Dodatkowy bezpiecznik – kilka prób w pierwszych s
+  <noscript>Wymagany jest JavaScript, aby wyświetlić widżet ElevenLabs.</noscript>
+</body>
+</html>

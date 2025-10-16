@@ -6,101 +6,42 @@
   <title>WORK IN PROGRESS — dialog AI</title>
   <meta name="robots" content="noindex,nofollow" />
   <meta name="color-scheme" content="light dark" />
-
   <style>
-    /* Minimalny, bezpieczny CSS — brak globalnych resetów */
-    :root{
-      --bg:#eff3ff;      /* lekko przyciemniony jasny */
-      --fg:#0f1733;      /* ciemny tekst */
-      --brand:#3558e6;   /* akcent technologiczny */
+    /* Minimalny, neutralny styl – nic nie przykrywa widżetu */
+    html, body { height:100%; margin:0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9ff, #e9edf7);
+      color: #10162a;
     }
-
-    html, body { height: 100%; }
-    body{
-      margin:0;
-      background: linear-gradient(180deg, #f5f7ff, var(--bg));
-      color: var(--fg);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
-      display:flex; flex-direction:column;
-      min-height:100dvh;
+    header {
+      height:60px; display:flex; align-items:center; justify-content:center;
+      border-bottom: 1px solid rgba(16,22,42,.12);
+      background: rgba(255,255,255,.9);
+      text-transform: uppercase; letter-spacing: .12em; font-weight:700; font-size:14px;
     }
-
-    /* Nagłówek marki */
-    header{
-      position: sticky; top:0;
-      height: 60px; display:flex; align-items:center; justify-content:center;
-      background: rgba(255,255,255,0.9);
-      -webkit-backdrop-filter: blur(6px);
-      backdrop-filter: blur(6px);
-      border-bottom: 1px solid rgba(16,23,51,.12);
-      z-index: 10;
+    main {
+      min-height: calc(100dvh - 60px);
+      display: grid; place-items: center; padding: 24px; text-align: center;
     }
-    .brand{
-      text-transform: uppercase; letter-spacing: .12em; font-weight: 700; font-size: 14px;
-    }
-
-    /* Centralny komunikat */
-    main{
-      flex:1; display:grid; place-items:center; padding: 24px;
-      text-align:center;
-    }
-    h1{
-      margin:0;
-      font-size: clamp(28px, 6vw, 64px);
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      font-weight: 800;
-      background: linear-gradient(180deg, #111a3a, #2a3a72 60%, var(--brand));
+    h1 {
+      margin:0; font-size: clamp(28px, 6vw, 64px);
+      letter-spacing: .16em; text-transform: uppercase; font-weight: 800;
+      background: linear-gradient(180deg, #0f1833, #2a3a72 60%, #3558e6);
       -webkit-background-clip: text; background-clip: text; color: transparent;
       text-shadow: 0 0 14px rgba(53,88,230,0.18);
     }
-    .cursor{ display:inline-block; width:.6ch; margin-left:.2ch; border-right:3px solid var(--brand); animation: blink 1.2s steps(1,end) infinite; }
-    @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
-
-    /* Pasek dolny tylko jako bezpieczna strefa dla widżetu (nie przykrywa go) */
-    footer{
-      height: 24px;
-    }
-
-    /* --- KLUCZOWE: widżet centralnie na dole, nad wszystkim --- */
-    .widget-dock{
-      position: fixed;
-      left: 50%;
-      bottom: 20px;
-      transform: translateX(-50%);
-      z-index: 999999;           /* wyżej niż wszystko inne */
-      pointer-events: none;      /* kontener przepuszcza, kliknięcia trafiają w widżet */
-    }
-    .widget-dock elevenlabs-convai{
-      pointer-events: auto;      /* sam widżet przyjmuje kliknięcia */
-      display: block;
-    }
-
-    /* Dodatkowa ochrona przed cudzym CSS: wymuszenie widoczności */
-    elevenlabs-convai, elevenlabs-convai * {
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-
-    /* Brak overflow hidden: pozwala rozwinąć okno widżetu powyżej */
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">dialog AI</div>
-  </header>
+  <header>dialog AI</header>
 
   <main>
-    <h1>WORK IN PROGRESS<span class="cursor" aria-hidden="true"></span></h1>
+    <h1>WORK IN PROGRESS</h1>
   </main>
 
-  <footer aria-hidden="true"></footer>
-
-  <!-- DOK — centralne mocowanie widżetu -->
-  <div class="widget-dock" aria-label="Pozycja widżetu ElevenLabs">
-    <!-- WIDŻET ELEVEN LABS — MUSI BYĆ DOKŁADNIE TEN KOMPONENT -->
-    <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
-  </div>
+  <!-- WIDŻET ELEVENLABS – BEZ JAKICHKOLWIEK DODATKOWYCH ATRYBUTÓW LUB OPRAWEK -->
+  <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
   <noscript>Wymagany jest JavaScript, aby wyświetlić widżet ElevenLabs.</noscript>

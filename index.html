@@ -6,13 +6,14 @@
   <title>WORK IN PROGRESS — DialogAI</title>
   <meta name="robots" content="noindex,nofollow" />
   <meta name="color-scheme" content="light dark" />
-  <meta name="description" content="Strona startowa z technicznym tłem. WIP znika po rozwinięciu widżetu i wraca po zminimalizowaniu. Nagłówek zawsze widoczny na mobilu." />
+  <meta name="description" content="Strona startowa z technicznym tłem. WIP znika po rozwinięciu widżetu i wraca po zminimalizowaniu. Nagłówek zawsze widoczny i nieprzykryty przez widżet na mobilu." />
 
   <!-- Nagłówek: nowoczesna, techniczna typografia -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
+      --header-h: 64px;
       --bg-top:#f6f8ff; --bg-mid:#ecf1ff; --bg-bot:#e7ecfb;
       --ink:#0f1733; --brand:#3558e6; --stroke: rgba(16,23,51,.12);
       --card: rgba(255,255,255,.72); --card-b: rgba(16,23,51,.14);
@@ -29,12 +30,12 @@
         linear-gradient(180deg, var(--bg-top), var(--bg-mid) 50%, var(--bg-bot) 100%);
       min-height:100dvh; overflow:auto;
       /* stały nagłówek: miejsce pod paskiem */
-      padding-top: calc(64px + env(safe-area-inset-top));
+      padding-top: calc(var(--header-h) + env(safe-area-inset-top));
     }
 
     /* Nagłówek — zawsze ponad widżetem, widoczny także na mobilu */
     header{
-      position:fixed; top:0; left:0; right:0; height:64px;
+      position:fixed; top:0; left:0; right:0; height:var(--header-h);
       z-index:2147483647; /* na wierzchu wszystkiego */
       display:flex; align-items:center; justify-content:center;
       background: linear-gradient(180deg, #f8faff, #eaf0ff);
@@ -47,20 +48,22 @@
       background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(53,88,230,.14));
       box-shadow: 0 0 16px rgba(53,88,230,.42); display:inline-block; vertical-align:middle; }
 
-    /* Mobil: nagłówek w 100% kryjący, aby nic nie prześwitywało */
+    /* Mobil: nagłówek całkowicie kryjący; dodatkowa warstwa-maskownica pod nim, by nic nie wchodziło "wizualnie" pod pasek */
+    .top-mask{ position:fixed; top:0; left:0; right:0; height:var(--header-h); z-index:2147483646; background:#ffffff; display:none; pointer-events:none; }
     @media (max-width: 640px){
       header{ background:#ffffff; box-shadow:0 4px 12px rgba(10,20,40,.08); border-bottom:1px solid rgba(16,23,51,.12); }
-      body{ padding-top: calc(64px + env(safe-area-inset-top)); }
+      .top-mask{ display:block; }
+      body{ padding-top: calc(var(--header-h) + env(safe-area-inset-top)); }
     }
 
     /* Efekty tła */
     .fx { position:fixed; inset:0; z-index:0; pointer-events:none; }
-    .scan{ position:fixed; left:0; right:0; top:64px; height:2px; z-index:0; pointer-events:none;
+    .scan{ position:fixed; left:0; right:0; top:var(--header-h); height:2px; z-index:0; pointer-events:none;
       background: linear-gradient(90deg, transparent, rgba(53,88,230,.45), transparent);
       filter: blur(.5px); opacity:.55; animation: sweep 6s linear infinite; }
     @keyframes sweep{ 0%{ transform:translateY(0);} 100%{ transform:translateY(100vh);} }
 
-    main{ position:relative; z-index:1; min-height:calc(100dvh - 64px);
+    main{ position:relative; z-index:1; min-height:calc(100dvh - var(--header-h));
       display:grid; place-items:center; padding:28px; text-align:center; }
 
     /* Kapsuła WIP — cienka ramka, halo tylko wewnątrz */
@@ -92,6 +95,8 @@
 </head>
 <body>
   <header><span class="dot" aria-hidden="true"></span>DialogAI</header>
+  <!-- Warstwa maskująca pod nagłówkiem na mobilu (bez interakcji, tylko wizualna granica) -->
+  <div class="top-mask" aria-hidden="true"></div>
 
   <!-- Efekty tła -->
   <canvas class="fx" id="constellation" aria-hidden="true"></canvas>

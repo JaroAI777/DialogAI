@@ -6,7 +6,7 @@
   <title>WORK IN PROGRESS — DialogAI</title>
   <meta name="robots" content="noindex,nofollow" />
   <meta name="color-scheme" content="light dark" />
-  <meta name="description" content="Strona startowa z technicznym tłem. WIP znika po rozwinięciu widżetu i wraca po zminimalizowaniu. Nagłówek zawsze widoczny i nieprzykryty przez widżet na mobilu." />
+  <meta name="description" content="Strona startowa z technicznym tłem. WIP znika po rozwinięciu widżetu i wraca po zminimalizowaniu. Nagłówek zawsze widoczny. Mobile fix: widżet dosunięty do nagłówka, bez wchodzenia pod pasek." />
 
   <!-- Nagłówek: nowoczesna, techniczna typografia -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
   <style>
     :root{
       --header-h: 64px;
+      --widget-offset-top: 0px; /* ustawiane dynamicznie na mobilu podczas ekspansji */
       --bg-top:#f6f8ff; --bg-mid:#ecf1ff; --bg-bot:#e7ecfb;
       --ink:#0f1733; --brand:#3558e6; --stroke: rgba(16,23,51,.12);
       --card: rgba(255,255,255,.72); --card-b: rgba(16,23,51,.14);
@@ -29,14 +30,13 @@
         radial-gradient(800px 600px at 18% 86%, rgba(53,88,230,.10), transparent 55%),
         linear-gradient(180deg, var(--bg-top), var(--bg-mid) 50%, var(--bg-bot) 100%);
       min-height:100dvh; overflow:auto;
-      /* stały nagłówek: miejsce pod paskiem */
       padding-top: calc(var(--header-h) + env(safe-area-inset-top));
     }
 
     /* Nagłówek — zawsze ponad widżetem, widoczny także na mobilu */
     header{
       position:fixed; top:0; left:0; right:0; height:var(--header-h);
-      z-index:2147483647; /* na wierzchu wszystkiego */
+      z-index:2147483647;
       display:flex; align-items:center; justify-content:center;
       background: linear-gradient(180deg, #f8faff, #eaf0ff);
       border-bottom:1px solid rgba(53,88,230,.28);
@@ -48,11 +48,9 @@
       background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(53,88,230,.14));
       box-shadow: 0 0 16px rgba(53,88,230,.42); display:inline-block; vertical-align:middle; }
 
-    /* Mobil: nagłówek całkowicie kryjący; dodatkowa warstwa-maskownica pod nim, by nic nie wchodziło "wizualnie" pod pasek */
-    .top-mask{ position:fixed; top:0; left:0; right:0; height:var(--header-h); z-index:2147483646; background:#ffffff; display:none; pointer-events:none; }
+    /* Mobil: nagłówek całkowicie kryjący */
     @media (max-width: 640px){
       header{ background:#ffffff; box-shadow:0 4px 12px rgba(10,20,40,.08); border-bottom:1px solid rgba(16,23,51,.12); }
-      .top-mask{ display:block; }
       body{ padding-top: calc(var(--header-h) + env(safe-area-inset-top)); }
     }
 
@@ -74,7 +72,7 @@
       transition: opacity .24s ease, transform .24s ease; overflow:hidden; }
     .capsule.fade-out{ opacity:0; transform: scale(.98); }
 
-    /* Zmienione HALO: dwa przeciwbieżne pierścienie, mieszczą się wewnątrz ramki */
+    /* Halo: dwa przeciwbieżne pierścienie, mieszczą się wewnątrz ramki */
     .capsule::before{ content:""; position:absolute; inset:10px; border-radius:12px; z-index:0;
       background: conic-gradient(from 0deg, rgba(53,88,230,.28) 0%, rgba(53,88,230,0) 22%, rgba(88,130,255,.22) 40%, rgba(53,88,230,0) 58%, rgba(130,170,255,.20) 75%, rgba(53,88,230,0) 100%);
       filter: blur(10px); animation: haloA 12s linear infinite; pointer-events:none; }
@@ -91,12 +89,13 @@
     .capsule > * { position: relative; z-index: 1; }
 
     @media (prefers-reduced-motion: reduce){ .scan{ animation:none; } .capsule::before, .capsule::after{ animation:none; } }
+
+    /* **Kluczowe**: host widżetu dosuwany pod nagłówek na mobilu, bez ingerencji w atrybuty */
+    elevenlabs-convai{ display:block; margin-top: var(--widget-offset-top, 0px); }
   </style>
 </head>
 <body>
   <header><span class="dot" aria-hidden="true"></span>DialogAI</header>
-  <!-- Warstwa maskująca pod nagłówkiem na mobilu (bez interakcji, tylko wizualna granica) -->
-  <div class="top-mask" aria-hidden="true"></div>
 
   <!-- Efekty tła -->
   <canvas class="fx" id="constellation" aria-hidden="true"></canvas>
@@ -112,10 +111,10 @@
   <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
-  <!-- FX + logika: więcej punktów, nieznacznie szybszy ruch, WIP po kliknięciu znika i wraca po zminimalizowaniu -->
+  <!-- FX + logika: galaktyki, WIP po kliknięciu znika i wraca po zminimalizowaniu; mobile dosunięcie widżetu -->
   <script>
     (function(){
-      /* ====== CONSTELLATION FX ====== */
+      /* ====== CONSTELLATION FX (galaktyki) ====== */
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const canvas = document.getElementById('constellation'); const ctx = canvas.getContext('2d');
       let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); let w, h, points, t = 0, running = !prefersReduced;
@@ -137,7 +136,22 @@
         try{ const sr = widget.shadowRoot; if(sr){ const big = largestVisibleRect(sr); const hasInput = sr.querySelector('textarea, input[type="text"], input[role="textbox"]'); if(big){ const area = big.width*big.height; const expanded = area > 90000 || (area>60000 && !!hasInput); const minimized = area < 40000; return { expanded, minimized }; } } }catch(e){}
         const r = widget.getBoundingClientRect(); return { expanded: (r.width>260 || r.height>320), minimized: (r.width<=180 && r.height<=180) };
       }
-      function evaluate(widget){ const {expanded, minimized} = getState(widget); if(!userInteracted) return; if(expanded) removeWip(); else if(minimized) restoreWip(); }
+      function evaluate(widget){
+        const {expanded, minimized} = getState(widget);
+        if(!userInteracted) return;
+        if(expanded){
+          removeWip();
+          // **Mobil**: dociśnij host widżetu poniżej nagłówka przez CSS var, bez zmian atrybutów
+          if(matchMedia('(max-width: 640px)').matches){
+            document.documentElement.style.setProperty('--widget-offset-top', getComputedStyle(document.documentElement).getPropertyValue('--header-h') || '64px');
+          }
+        } else if(minimized){
+          restoreWip();
+          if(matchMedia('(max-width: 640px)').matches){
+            document.documentElement.style.setProperty('--widget-offset-top', '0px');
+          }
+        }
+      }
       function bindWidget(){ const widget = document.querySelector('elevenlabs-convai'); if(!widget) return false; document.addEventListener('pointerdown', (ev)=>{ const path = ev.composedPath ? ev.composedPath() : (ev.path||[]); if(path.includes(widget)){ userInteracted = true; setTimeout(()=> evaluate(widget), 150); setTimeout(()=> evaluate(widget), 450); } }, true); const ro = new ResizeObserver(()=> evaluate(widget)); ro.observe(widget); const mo1 = new MutationObserver(()=> evaluate(widget)); mo1.observe(widget, { attributes:true, subtree:true, childList:true }); try{ if(widget.shadowRoot){ const mo2 = new MutationObserver(()=> evaluate(widget)); mo2.observe(widget.shadowRoot, { attributes:true, subtree:true, childList:true }); } }catch(e){} setInterval(()=> evaluate(widget), 350); restoreWip(); return true; }
       if(!bindWidget()){ const id = setInterval(()=>{ if(bindWidget()) clearInterval(id); }, 400); setTimeout(()=> clearInterval(id), 12000); }
     })();

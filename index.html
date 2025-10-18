@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WORK IN PROGRESS — dialog AI</title>
+  <title>WORK IN PROGRESS — DialogAI</title>
   <meta name="robots" content="noindex,nofollow" />
   <meta name="color-scheme" content="light dark" />
   <meta name="description" content="Minimalistyczna strona startowa z technicznym, animowanym tłem." />
@@ -36,13 +36,15 @@
       overflow:auto;
     }
 
+    /* Nagłówek bez wymuszania wielkich liter */
     header{
       position:sticky; top:0; z-index:5;
       height:64px; display:flex; align-items:center; justify-content:center;
       background: rgba(255,255,255,.88);
       -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       border-bottom:1px solid var(--stroke);
-      text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:14px;
+      letter-spacing:.08em; font-weight:700; font-size:14px;
+      font-variant-caps: normal;
     }
     header .dot{
       width:10px; height:10px; border-radius:50%; margin-right:.6rem;
@@ -109,7 +111,8 @@
   </style>
 </head>
 <body>
-  <header><span class="dot" aria-hidden="true"></span>dialog AI</header>
+  <!-- Dokładnie taki zapis: "DialogAI" -->
+  <header><span class="dot" aria-hidden="true"></span>DialogAI</header>
 
   <canvas class="fx" id="constellation" aria-hidden="true"></canvas>
   <div class="scan" aria-hidden="true"></div>
@@ -120,9 +123,11 @@
     </div>
   </main>
 
+  <!-- Widżet ElevenLabs — wklejony 1:1 -->
   <elevenlabs-convai agent-id="agent_3701k7j73w94ea5btrsjrm6cdqzn"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
+  <!-- Animacja tła „constellation” -->
   <script>
     (function(){
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -140,7 +145,7 @@
       }
 
       function initPoints(){
-        const density = 0.00011; // delikatna gęstość
+        const density = 0.00011;
         const count = Math.max(40, Math.floor(w * h * density / (dpr*dpr)));
         points = [];
         for(let i=0;i<count;i++){

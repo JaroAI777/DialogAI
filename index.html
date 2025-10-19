@@ -11,13 +11,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="WORK IN PROGRESS — DialogAI" />
 
-
   <!-- Nagłówek: nowoczesna, techniczna typografia -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --header-h: 64px;
+      --header-h: clamp(96px, 10vw, 144px);
       --widget-offset-top: 0px; /* ustawiane dynamicznie na mobilu podczas ekspansji */
       --bg-top:#f6f8ff; --bg-mid:#ecf1ff; --bg-bot:#e7ecfb;
       --ink:#0f1733; --brand:#3558e6; --stroke: rgba(16,23,51,.12);
@@ -44,13 +43,9 @@
       display:flex; align-items:center; justify-content:center;
       background: linear-gradient(180deg, #f8faff, #eaf0ff);
       border-bottom:1px solid rgba(53,88,230,.28);
-      color:#16223f; letter-spacing:.02em; font-weight:700; font-size:28px; line-height:1.1;
-      font-family:'Space Grotesk', ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
       box-shadow:0 2px 8px rgba(10,20,40,.06);
     }
-    header .dot{ width:12px; height:12px; border-radius:50%; margin-right:.6rem;
-      background: radial-gradient(circle at 40% 40%, #fff, var(--brand) 60%, rgba(53,88,230,.14));
-      box-shadow: 0 0 16px rgba(53,88,230,.42); display:inline-block; vertical-align:middle; }
+    header .logo{ height: calc(var(--header-h) - 16px); max-height: 90px; width:auto; display:block; image-rendering:auto; max-width: 92vw; filter: drop-shadow(0 0 10px rgba(53,88,230,.28)); }
 
     /* Mobil: nagłówek całkowicie kryjący */
     @media (max-width: 640px){
@@ -96,10 +91,26 @@
 
     /* **Kluczowe**: host widżetu dosuwany pod nagłówek na mobilu, bez ingerencji w atrybuty */
     elevenlabs-convai{ display:block; margin-top: var(--widget-offset-top, 0px); }
-  </style>
+    /* Skalowanie mobilne — mniejsze logo wyłącznie na telefonach */
+  @media (max-width: 640px){
+    :root{ --header-h: 56px; }
+    header .logo{ height: calc(var(--header-h) - 10px); max-height: 44px; }
+  }
+  @media (max-width: 380px){
+    :root{ --header-h: 52px; }
+    header .logo{ max-height: 40px; }
+  }
+</style>
+  <!-- Favicon & PWA basics: wbudowane data URI na podstawie LogoSamRobot.png -->
+  <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAA...ABzenr0AAAHFklEQVR4nK2Xf4wVVxXHP+fOvHmzbxfYwMqWVaxugcRFLQgtaI..." />
+  <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAABm..." />
+  <link rel="icon" href="data:image/x-icon;base64,AAABAAMAEBAAAAAAIADzAgAAN...AAACAAEAgAACkDAAAwMAAAAAAgAOoMAAA5CwAAiVBORw0KGgoAAAANSUhEUgA..." />
+  <meta name="theme-color" content="#3558e6" />
 </head>
 <body>
-  <header><span class="dot" aria-hidden="true"></span>DialogAI</header>
+  <header aria-label="Górny baner z logo">
+    <img class="logo" alt="DialogAI — logo" loading="eager" decoding="async" fetchpriority="high" src="toto.png" />
+  </header>
 
   <!-- Efekty tła -->
   <canvas class="fx" id="constellation" aria-hidden="true"></canvas>
@@ -161,5 +172,29 @@
   </script>
 
   <noscript>Wymagany jest JavaScript, aby wyświetlić animację i widżet ElevenLabs.</noscript>
+  <script>
+    function fallbackLogo(){
+      const svgNS='http://www.w3.org/2000/svg';
+      const svg=document.createElementNS(svgNS,'svg');
+      svg.setAttribute('viewBox','0 0 256 256');
+      svg.setAttribute('aria-label','DialogAI — logo (zapasowe)');
+      svg.setAttribute('class','logo');
+      // dymek
+      const g=document.createElementNS(svgNS,'g');
+      const path=document.createElementNS(svgNS,'path');
+      path.setAttribute('fill','var(--brand)');
+      path.setAttribute('d','M48 48h144c13.3 0 24 10.7 24 24v80c0 13.3-10.7 24-24 24H108l-28 28v-28H48c-13.3 0-24-10.7-24-24V72c0-13.3 10.7-24 24-24z');
+      g.appendChild(path);
+      // robot
+      const face=document.createElementNS(svgNS,'rect');
+      face.setAttribute('x','84'); face.setAttribute('y','92'); face.setAttribute('width','88'); face.setAttribute('height','56'); face.setAttribute('rx','12'); face.setAttribute('fill','#ffffff');
+      const eyeL=document.createElementNS(svgNS,'circle'); eyeL.setAttribute('cx','110'); eyeL.setAttribute('cy','120'); eyeL.setAttribute('r','8'); eyeL.setAttribute('fill','var(--brand)');
+      const eyeR=document.createElementNS(svgNS,'circle'); eyeR.setAttribute('cx','146'); eyeR.setAttribute('cy','120'); eyeR.setAttribute('r','8'); eyeR.setAttribute('fill','var(--brand)');
+      const ant=document.createElementNS(svgNS,'rect'); ant.setAttribute('x','122'); ant.setAttribute('y','78'); ant.setAttribute('width','12'); ant.setAttribute('height','20'); ant.setAttribute('rx','6'); ant.setAttribute('fill','var(--brand)');
+      g.appendChild(face); g.appendChild(eyeL); g.appendChild(eyeR); g.appendChild(ant);
+      svg.appendChild(g);
+      return svg;
+    }
+  </script>
 </body>
 </html>
